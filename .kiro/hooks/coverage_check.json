@@ -1,0 +1,8 @@
+{
+  "name": "Test Coverage Enforcement",
+  "description": "Runs automatically after tests finish to ensure minimum thresholds are met.",
+  "event": "onTestRun",
+  "action": "execute_bash",
+  "instructions": "Execute code coverage. If line coverage drops below 80%, fail the hook.",
+  "command": "dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Threshold=80"
+}

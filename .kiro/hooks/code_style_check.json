@@ -1,0 +1,11 @@
+{
+  "name": "Code Style Checker",
+  "description": "Triggered on save for C# files to enforce dotNet format and style rules.",
+  "event": "onSave",
+  "matchFilters": {
+    "filePattern": ["**/*.cs"]
+  },
+  "action": "execute_bash",
+  "instructions": "Run dotnet format on the saved file and report any new warnings or errors based on the editorconfig.",
+  "command": "dotnet format include $KIRO_CURRENT_FILE --verify-no-changes"
+}

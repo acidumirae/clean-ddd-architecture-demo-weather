@@ -1,0 +1,8 @@
+{
+  "name": "Quality Bar Enforcement",
+  "description": "Master hook to aggregate quality checks before a commit or PR.",
+  "event": "preCommit",
+  "action": "execute_bash",
+  "instructions": "Run dotnet format, dotnet test, and check for any warnings or build errors. If any command fails, cancel the commit.",
+  "command": "dotnet format --verify-no-changes && dotnet build -warnaserror && dotnet test --no-build"
+}

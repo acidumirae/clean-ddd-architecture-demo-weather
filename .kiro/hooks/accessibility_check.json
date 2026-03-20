@@ -1,0 +1,10 @@
+{
+  "name": "Accessibility Validation",
+  "description": "Triggered when UI components are created or updated. Validates HTML and semantic rules.",
+  "event": "onSave",
+  "matchFilters": {
+    "filePattern": ["src/WeatherApp.Web/Views/**/*.cshtml", "**/*.html"]
+  },
+  "action": "prompt_kiro",
+  "instructions": "Analyze the saved markup. Ensure it complies with WCAG 2.1 AA as per the steering guidelines. Check for semantic tags, appropriate aria roles, and alt text on images. Issue a report in Kiro's output terminal and suggest fixes if violations are found."
+}

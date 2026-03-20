@@ -1,0 +1,10 @@
+{
+  "name": "Test Generation Trigger",
+  "description": "Automatically generates unit tests when a new class method or handler is implemented.",
+  "event": "onSave",
+  "matchFilters": {
+    "filePattern": ["src/**/*.cs"]
+  },
+  "action": "prompt_kiro",
+  "instructions": "Review the newly saved C# file. If it contains new public methods or classes without corresponding test files in the 'tests/' directory, generate xUnit tests following the AAA pattern and testing steering guidelines. Ensure you mock dependencies with Moq."
+}
