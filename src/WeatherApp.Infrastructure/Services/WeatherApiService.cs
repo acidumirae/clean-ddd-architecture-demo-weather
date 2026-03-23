@@ -38,4 +38,32 @@ public class WeatherApiService : IWeatherService
             LastUpdated = DateTime.UtcNow
         };
     }
+
+    public async Task<WeatherForecast> GetWeatherForecastAsync(string location)
+    {
+        var response = await _httpClient.GetAsync($"forecast.json?key={_apiKey}&q={Uri.EscapeDataString(location)}&days=7");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var forecastData = JsonSerializer.Deserialize<WeatherForecastApiResponse>(content);
+
+        if (forecastData?.Location == null || forecastData.Forecast == null)
+        {
+            throw new Exception("Invalid response from weather forecast API");
+        }
+
+        var days = forecastData.Forecast.ForecastDay.Select(d => new WeatherForecastDay
+        {
+            Date = DateOnly.Parse(d.Date),
+            MaxTempC = d.Day?.MaxTempC ?? 0,
+            MinTempC = d.Day?.MinTempC ?? 0,
+            Description = d.Day?.Condition?.Text ?? "Unknown"
+        }).ToList();
+
+        return new WeatherForecast
+        {
+            Location = forecastData.Location.Name,
+            Days = days
+        };
+    }
 }
