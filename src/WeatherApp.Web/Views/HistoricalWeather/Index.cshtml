@@ -1,0 +1,71 @@
+@model WeatherApp.Domain.Entities.WeatherForecast
+
+@{
+    ViewData["Title"] = "Historical Weather";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">Historical Weather</h1>
+
+    <form method="post" class="mb-4" aria-label="Historical weather search">
+        <div style="max-width: 500px; margin: 0 auto; text-align: left;">
+            <div class="mb-3">
+                <label for="location" class="form-label">City</label>
+                <input type="text" id="location" name="location" class="form-control" placeholder="Enter city name..." />
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState["location"]?.Errors.Count > 0)
+                {
+                    <span role="alert" class="text-danger">@ViewData.ModelState["location"]!.Errors[0].ErrorMessage</span>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" />
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState["startDate"]?.Errors.Count > 0)
+                {
+                    <span role="alert" class="text-danger">@ViewData.ModelState["startDate"]!.Errors[0].ErrorMessage</span>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" id="endDate" name="endDate" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Get Historical Weather</button>
+        </div>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+
+    @if (Model?.Days?.Count > 0)
+    {
+        <h2 class="mb-3">@Model.Location</h2>
+
+        <div style="max-width: 700px; margin: 0 auto;">
+            <table class="table table-striped table-bordered" aria-label="Historical weather for @Model.Location">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Max °C</th>
+                        <th scope="col">Min °C</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var day in Model.Days)
+                    {
+                        <tr>
+                            <td>@day.Date.ToString("ddd, dd MMM yyyy")</td>
+                            <td>@day.MaxTempC °C</td>
+                            <td>@day.MinTempC °C</td>
+                            <td>@day.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -66,4 +66,36 @@ public class WeatherApiService : IWeatherService
             Days = days
         };
     }
+
+    public async Task<WeatherForecast> GetHistoricalWeatherAsync(
+        string location, DateOnly startDate, DateOnly endDate)
+    {
+        var url = $"history.json?key={_apiKey}" +
+                  $"&q={Uri.EscapeDataString(location)}" +
+                  $"&dt={startDate:yyyy-MM-dd}" +
+                  $"&end_dt={endDate:yyyy-MM-dd}";
+
+        var response = await _httpClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var historyData = JsonSerializer.Deserialize<WeatherForecastApiResponse>(content);
+
+        if (historyData?.Location == null || historyData.Forecast == null)
+            throw new InvalidOperationException("Invalid response from historical weather API");
+
+        var days = historyData.Forecast.ForecastDay.Select(d => new WeatherForecastDay
+        {
+            Date = DateOnly.Parse(d.Date),
+            MaxTempC = d.Day?.MaxTempC ?? 0,
+            MinTempC = d.Day?.MinTempC ?? 0,
+            Description = d.Day?.Condition?.Text ?? "Unknown"
+        }).ToList();
+
+        return new WeatherForecast
+        {
+            Location = historyData.Location.Name,
+            Days = days
+        };
+    }
 }

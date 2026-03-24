@@ -6,4 +6,5 @@ public interface IWeatherService
 {
     Task<Weather> GetCurrentWeatherAsync(string location);
     Task<WeatherForecast> GetWeatherForecastAsync(string location);
+    Task<WeatherForecast> GetHistoricalWeatherAsync(string location, DateOnly startDate, DateOnly endDate);
 }
